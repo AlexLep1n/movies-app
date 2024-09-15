@@ -19,7 +19,7 @@ export default class MoviesService {
 
   async getAllMovies() {
     const moviesData = await this.getResource(
-      '?query=return&include_adult=false&language=ru-RU&page=1'
+      '?query=return&include_adult=false&language=en-US&page=1'
     );
     return moviesData.results;
   }

@@ -6,6 +6,6 @@
   "bracketSpacing": true,
   "jsxSingleQuote": false,
   "printWidth": 100,
-  "endOfLine": "lf",
+  "endOfLine": "auto",
   "tabWidth": 2
 }

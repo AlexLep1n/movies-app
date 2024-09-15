@@ -1,0 +1,51 @@
+.card {
+  display: flex;
+  width: 454px;
+  height: 279px;
+  box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.15);
+}
+
+.card__img {
+  width: 183px;
+}
+
+.card__content {
+  padding: 12px 20px 12px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.card__title {
+  font-size: 20px;
+  line-height: 140%;
+  color: #000;
+}
+
+.card__date {
+  font-size: 12px;
+  line-height: 183%;
+  color: #827e7e;
+}
+
+.card__genre {
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.65);
+  border: 1px solid #d9d9d9;
+  border-radius: 2px;
+  padding: 2px 4px 3px 5px;
+}
+
+.card__genre:hover {
+  color: rgba(0, 0, 0, 0.65);
+}
+
+.card__overview {
+  font-size: 12px;
+  line-height: 183%;
+  color: #000;
+  height: 135px;
+}
