@@ -5,21 +5,32 @@ import { useState, useEffect } from 'react';
 
 export default function MainPage() {
   const [movies, setMovies] = useState([]);
-  const [isloading, setIsloading] = useState(true);
+  const [genres, setGenres] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     const moviesAPI = new MoviesService();
-    moviesAPI.getAllMovies().then((data) => {
-      setMovies(data);
-      setIsloading(false);
-    });
+    moviesAPI
+      .getAllMovies()
+      .then((moviesData) => {
+        setMovies(moviesData);
+        setIsLoading(false);
+        setError(false);
+      })
+      .catch(() => {
+        setError(true);
+        setIsLoading(false);
+      });
+    moviesAPI.getGenres().then((genresData) => setGenres(genresData));
   }, []);
-  if (movies) console.log(movies);
+  // if (movies) console.log(movies);
+  // if (genres.length > 0) console.log(genres);
 
   return (
     <>
       <div className={classes.container}>
-        <MoviesList movies={movies} isloading={isloading} />
+        <MoviesList movies={movies} genres={genres} isLoading={isLoading} error={error} />
       </div>
     </>
   );

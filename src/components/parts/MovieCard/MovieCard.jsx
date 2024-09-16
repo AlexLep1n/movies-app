@@ -12,6 +12,7 @@ export default function MovieCard({
   overview,
   vote_average: voteAverage,
   release_date: releaseDate,
+  genres,
 }) {
   return (
     <>
@@ -31,13 +32,18 @@ export default function MovieCard({
               ? format(parseISO(releaseDate), 'MMMM d, yyyy')
               : 'The release is expected'}
           </p>
-          <Flex gap="small">
-            <a className={classes.card__genre} href="#">
-              Action
-            </a>
-            <a className={classes.card__genre} href="#">
-              Drama
-            </a>
+          <Flex gap="small" wrap>
+            {genres.length > 0 &&
+              genres.map((genre) => (
+                <a key={genre} className={classes.card__genre} href="#">
+                  {genre}
+                </a>
+              ))}
+            {genres.length === 0 && (
+              <a key={Date.now()} className={classes.card__genre} href="#">
+                No data
+              </a>
+            )}
           </Flex>
           <p className={classes.card__overview}>{trancateText(overview)}</p>
           <Rate
@@ -59,4 +65,5 @@ MovieCard.propTypes = {
   overview: PropTypes.string.isRequired,
   vote_average: PropTypes.number.isRequired,
   release_date: PropTypes.string.isRequired,
+  genres: PropTypes.array,
 };

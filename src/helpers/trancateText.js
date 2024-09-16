@@ -4,7 +4,7 @@ export default function trancateText(text) {
   if (!text) {
     return;
   }
-  let maxLength = 200;
+  let maxLength = 150;
   if (text.length <= maxLength) {
     return text;
   }

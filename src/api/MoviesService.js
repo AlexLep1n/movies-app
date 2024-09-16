@@ -1,10 +1,11 @@
 export default class MoviesService {
   _basicUrl = 'https://api.themoviedb.org/3/search/movie';
+  _genresUrl = 'https://api.themoviedb.org/3/genre/movie/list';
   _accessKey =
     'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI1MTQzZWYwOTIzN2RjOGVkY2UzMWJlYjMyNmZhNTlmNiIsIm5iZiI6MTcyNjMzMjcwOS42MDg0NjgsInN1YiI6IjY2ZTViYmI5MmNmMzI1OTc5YTM5Nzc2ZCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.nGMQFMnvCPM8H9H6i0DAwGfPttVMCQCxSjoJtVke_6A';
 
-  async getResource(url) {
-    const response = await fetch(`${this._basicUrl}${url}`, {
+  async getResource(urlBase, url) {
+    const response = await fetch(`${urlBase}${url}`, {
       method: 'GET',
       headers: {
         accept: 'application/json',
@@ -19,8 +20,19 @@ export default class MoviesService {
 
   async getAllMovies() {
     const moviesData = await this.getResource(
+      this._basicUrl,
       '?query=return&include_adult=false&language=en-US&page=1'
     );
     return moviesData.results;
   }
+
+  async getGenres() {
+    const genresData = await this.getResource(this._genresUrl, '');
+    return genresData.genres;
+  }
 }
+
+[
+  { adult: false, backdrop_path: null, genre_ids: [16, 80], id: 839321, original_language: 'en' },
+  { adult: false, backdrop_path: null, genre_ids: [18, 27], id: 1086372, original_language: 'hy' },
+];
