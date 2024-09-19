@@ -25,6 +25,7 @@ export default function MovieCard({
           />
         )}
         {!posterPath && <img className={classes.card__img} src={noIcon} alt={`no poster`} />}
+        <p className={classes.card__rate}>{Math.floor(voteAverage * 10) / 10}</p>
         <div className={classes.card__content}>
           <h3 className={classes.card__title}>{title}</h3>
           <p className={classes.card__date}>
@@ -48,7 +49,8 @@ export default function MovieCard({
           <p className={classes.card__overview}>{trancateText(overview)}</p>
           <Rate
             count={10}
-            defaultValue={voteAverage}
+            // Добавить стейт для рейтинга
+            defaultValue={0}
             allowHalf={true}
             allowClear={false}
             style={{ fontSize: '15px', alignSelf: 'flex-end' }}

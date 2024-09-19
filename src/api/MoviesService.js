@@ -18,10 +18,10 @@ export default class MoviesService {
     return await response.json();
   }
 
-  async getAllMovies() {
+  async getAllMovies(inputData) {
     const moviesData = await this.getResource(
       this._basicUrl,
-      '?query=return&include_adult=false&language=en-US&page=1'
+      `?query=${inputData}&include_adult=false&language=en-US&page=1`
     );
     return moviesData.results;
   }
