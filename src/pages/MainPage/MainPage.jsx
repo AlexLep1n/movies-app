@@ -4,7 +4,6 @@ import MoviesService from '../../api/MoviesService';
 import { useState, useEffect, useCallback } from 'react';
 import CustomInput from '../../components/ui/CustomInput/CustomInput';
 import debounce from 'lodash.debounce';
-import { Alert } from 'antd';
 
 export default function MainPage() {
   const [movies, setMovies] = useState([]);
@@ -58,25 +57,7 @@ export default function MainPage() {
           value={inputData}
           onChange={(e) => setInputData(e.target.value)}
         />
-        {error.fetch && (
-          <Alert
-            message="Error!"
-            description=" The data is not being retrieved"
-            type="error"
-            showIcon
-          />
-        )}
-        {error.notFound && !isLoading && (
-          <Alert
-            message="Внимание!"
-            description="По данному запросу фильмы не найдены!"
-            type="info"
-            showIcon
-          />
-        )}
-        {!error.notFound && !error.fetch && (
-          <MoviesList movies={movies} genres={genres} isLoading={isLoading} />
-        )}
+        <MoviesList movies={movies} genres={genres} isLoading={isLoading} error={error} />
       </div>
     </>
   );
