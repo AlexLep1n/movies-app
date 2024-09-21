@@ -35,6 +35,7 @@
   font-size: 20px;
   line-height: 140%;
   color: #000;
+  max-width: 190px;
 }
 
 .card__date {

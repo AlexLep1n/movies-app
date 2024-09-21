@@ -1,11 +1,15 @@
 export default class MoviesService {
-  _basicUrl = 'https://api.themoviedb.org/3/search/movie';
-  _genresUrl = 'https://api.themoviedb.org/3/genre/movie/list';
-  _accessKey =
-    'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI1MTQzZWYwOTIzN2RjOGVkY2UzMWJlYjMyNmZhNTlmNiIsIm5iZiI6MTcyNjMzMjcwOS42MDg0NjgsInN1YiI6IjY2ZTViYmI5MmNmMzI1OTc5YTM5Nzc2ZCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.nGMQFMnvCPM8H9H6i0DAwGfPttVMCQCxSjoJtVke_6A';
+  constructor() {
+    this._basicUrl = 'https://api.themoviedb.org/3/search/movie';
+    this._genresUrl = 'https://api.themoviedb.org/3/genre/movie/list';
+    this._accessKey =
+      'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI1MTQzZWYwOTIzN2RjOGVkY2UzMWJlYjMyNmZhNTlmNiIsIm5iZiI6MTcyNjMzMjcwOS42MDg0NjgsInN1YiI6IjY2ZTViYmI5MmNmMzI1OTc5YTM5Nzc2ZCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.nGMQFMnvCPM8H9H6i0DAwGfPttVMCQCxSjoJtVke_6A';
+  }
 
-  async getResource(urlBase, url) {
-    const response = await fetch(`${urlBase}${url}`, {
+  async getResource(urlBase, params) {
+    const fullUrl = `${urlBase}${params}`;
+
+    const response = await fetch(fullUrl, {
       method: 'GET',
       headers: {
         accept: 'application/json',
@@ -13,16 +17,23 @@ export default class MoviesService {
       },
     });
     if (!response.ok) {
-      throw new Error(`Could not fetch ${url}, received status ${response.status}`);
+      const errorText = response.text();
+      throw new Error(
+        `Could not fetch ${fullUrl}, received status ${response.status}: ${errorText}`
+      );
     }
     return await response.json();
   }
 
   async getAllMovies(inputData) {
-    const moviesData = await this.getResource(
-      this._basicUrl,
-      `?query=${inputData}&include_adult=false&language=en-US&page=1`
-    );
+    const params = new URLSearchParams({
+      query: inputData,
+      include_adult: false,
+      language: 'en-US',
+      page: 1,
+    });
+
+    const moviesData = await this.getResource(this._basicUrl, `?${params}`);
     return moviesData.results;
   }
 
@@ -31,8 +42,3 @@ export default class MoviesService {
     return genresData.genres;
   }
 }
-
-[
-  { adult: false, backdrop_path: null, genre_ids: [16, 80], id: 839321, original_language: 'en' },
-  { adult: false, backdrop_path: null, genre_ids: [18, 27], id: 1086372, original_language: 'hy' },
-];

@@ -5,6 +5,7 @@ import noIcon from '/img/no_icon.png';
 import PropTypes from 'prop-types';
 import { format } from 'date-fns';
 import parseISO from 'date-fns/parseISO';
+import { Spin } from 'antd';
 
 export default function MovieCard({
   title,
@@ -13,19 +14,22 @@ export default function MovieCard({
   vote_average: voteAverage,
   release_date: releaseDate,
   genres,
+  isLoading,
 }) {
   return (
     <>
       <div className={classes.card}>
         {posterPath && (
-          <img
-            className={classes.card__img}
-            src={`https://image.tmdb.org/t/p/original${posterPath}`}
-            alt={`${title} poster`}
-          />
+          <Spin spinning={isLoading} fullscreen={isLoading} size="large">
+            <img
+              className={classes.card__img}
+              src={`https://image.tmdb.org/t/p/original${posterPath}`}
+              alt={`${title} poster`}
+            />
+          </Spin>
         )}
         {!posterPath && <img className={classes.card__img} src={noIcon} alt={`no poster`} />}
-        <p className={classes.card__rate}>{Math.floor(voteAverage * 10) / 10}</p>
+        <p className={classes.card__rate}>{voteAverage.toFixed(1)}</p>
         <div className={classes.card__content}>
           <h3 className={classes.card__title}>{title}</h3>
           <p className={classes.card__date}>
@@ -68,4 +72,5 @@ MovieCard.propTypes = {
   vote_average: PropTypes.number.isRequired,
   release_date: PropTypes.string.isRequired,
   genres: PropTypes.array,
+  isLoading: PropTypes.bool.isRequired,
 };
