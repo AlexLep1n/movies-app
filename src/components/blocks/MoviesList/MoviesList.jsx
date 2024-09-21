@@ -1,10 +1,17 @@
 import PropTypes from 'prop-types';
 import MovieCard from '../../parts/MovieCard/MovieCard';
 import classes from './MoviesList.module.css';
-import { Spin, Alert } from 'antd';
+import { Spin, Alert, Pagination } from 'antd';
 import { useCallback } from 'react';
 
-export default function MoviesList({ movies, genres, isLoading, error }) {
+export default function MoviesList({
+  movies,
+  genres,
+  isLoading,
+  error,
+  currentPage,
+  setCurrentPage,
+}) {
   const cbGenreNames = useCallback((movie, genres) => {
     return genres
       .map((genre) => (movie.genre_ids.includes(genre.id) ? genre.name : ''))
@@ -29,7 +36,7 @@ export default function MoviesList({ movies, genres, isLoading, error }) {
           showIcon
         />
       )}
-      <Spin spinning={isLoading} fullscreen={isLoading} size="large">
+      <Spin spinning={isLoading} tip="Loading" size="large">
         <section className={classes.movies}>
           {movies.map((movie) => (
             <MovieCard
@@ -39,15 +46,18 @@ export default function MoviesList({ movies, genres, isLoading, error }) {
               genres={cbGenreNames(movie, genres)}
             />
           ))}
+          {movies.length > 0 && (
+            <Pagination
+              align="center"
+              current={currentPage}
+              pageSize={20}
+              total={200}
+              showSizeChanger={false}
+              onChange={(pageNumber) => setCurrentPage(pageNumber)}
+            />
+          )}
         </section>
       </Spin>
-      {/* <List
-        dataSource={movies}
-        grid={{ gutter: [36, 36], column: 2, xs: 0.5 }}
-        size="small"
-        loading={isloading}
-        renderItem={(movie) => <MovieCard {...movie} key={movie.id} />}
-      /> */}
     </>
   );
 }
@@ -57,4 +67,6 @@ MoviesList.propTypes = {
   genres: PropTypes.array.isRequired,
   isLoading: PropTypes.bool.isRequired,
   error: PropTypes.object.isRequired,
+  currentPage: PropTypes.number.isRequired,
+  setCurrentPage: PropTypes.func.isRequired,
 };

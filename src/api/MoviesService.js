@@ -25,12 +25,12 @@ export default class MoviesService {
     return await response.json();
   }
 
-  async getAllMovies(inputData) {
+  async getAllMovies(inputData, pageNumber) {
     const params = new URLSearchParams({
       query: inputData,
       include_adult: false,
       language: 'en-US',
-      page: 1,
+      page: pageNumber,
     });
 
     const moviesData = await this.getResource(this._basicUrl, `?${params}`);

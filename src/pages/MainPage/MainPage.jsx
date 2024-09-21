@@ -11,14 +11,15 @@ export default function MainPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState({ notFound: false, fetch: false });
   const [inputData, setInputData] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
 
   const moviesAPI = new MoviesService();
 
   const debouncedFetchMovies = useCallback(
-    debounce(async (movieName) => {
+    debounce(async (movieName, pageNumber) => {
       setIsLoading(true);
       try {
-        const moviesData = await moviesAPI.getAllMovies(movieName);
+        const moviesData = await moviesAPI.getAllMovies(movieName, pageNumber);
         setMovies(moviesData);
         setError({ notFound: moviesData.length === 0, fetch: false });
       } catch {
@@ -26,13 +27,13 @@ export default function MainPage() {
       } finally {
         setIsLoading(false);
       }
-    }, 1000),
+    }, 500),
     [moviesAPI]
   );
 
   useEffect(() => {
     if (inputData.trim()) {
-      debouncedFetchMovies(inputData);
+      debouncedFetchMovies(inputData, currentPage);
     } else {
       setMovies([]);
       setError({ notFound: false, fetch: false });
@@ -41,7 +42,7 @@ export default function MainPage() {
     return () => {
       debouncedFetchMovies.cancel();
     };
-  }, [inputData]);
+  }, [inputData, currentPage]);
 
   useEffect(() => {
     console.log('getGenres');
@@ -57,7 +58,14 @@ export default function MainPage() {
           value={inputData}
           onChange={(e) => setInputData(e.target.value)}
         />
-        <MoviesList movies={movies} genres={genres} isLoading={isLoading} error={error} />
+        <MoviesList
+          movies={movies}
+          genres={genres}
+          isLoading={isLoading}
+          error={error}
+          currentPage={currentPage}
+          setCurrentPage={(pageNumber) => setCurrentPage(pageNumber)}
+        />
       </div>
     </>
   );

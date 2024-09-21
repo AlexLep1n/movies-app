@@ -20,7 +20,7 @@ export default function MovieCard({
     <>
       <div className={classes.card}>
         {posterPath && (
-          <Spin spinning={isLoading} fullscreen={isLoading} size="large">
+          <Spin spinning={isLoading} size="large">
             <img
               className={classes.card__img}
               src={`https://image.tmdb.org/t/p/original${posterPath}`}
