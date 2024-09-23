@@ -1,4 +1,4 @@
-import trancateText from '../../../helpers/trancateText';
+import trancateText from '../../../utils/trancateText';
 import classes from './MovieCard.module.css';
 import { Flex, Rate } from 'antd';
 import noIcon from '/img/no_icon.png';

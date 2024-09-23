@@ -17,7 +17,6 @@ export default function MoviesList({
       .map((genre) => (movie.genre_ids.includes(genre.id) ? genre.name : ''))
       .filter((item) => item);
   }, []);
-
   return (
     <>
       {error.fetch && (

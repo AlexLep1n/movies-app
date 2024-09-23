@@ -17,6 +17,7 @@ export default function MainPage() {
 
   const debouncedFetchMovies = useCallback(
     debounce(async (movieName, pageNumber) => {
+      console.log('Call debounce');
       setIsLoading(true);
       try {
         const moviesData = await moviesAPI.getAllMovies(movieName, pageNumber);
@@ -33,19 +34,18 @@ export default function MainPage() {
 
   useEffect(() => {
     if (inputData.trim()) {
+      console.log('Call debouncedFetchMovies');
       debouncedFetchMovies(inputData, currentPage);
     } else {
       setMovies([]);
       setError({ notFound: false, fetch: false });
     }
-
     return () => {
       debouncedFetchMovies.cancel();
     };
   }, [inputData, currentPage]);
 
   useEffect(() => {
-    console.log('getGenres');
     moviesAPI.getGenres().then((genresData) => setGenres(genresData));
   }, []);
 
