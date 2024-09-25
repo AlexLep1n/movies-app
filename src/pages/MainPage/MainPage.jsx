@@ -4,6 +4,8 @@ import MoviesService from '../../api/MoviesService';
 import { useState, useEffect, useCallback } from 'react';
 import CustomInput from '../../components/ui/CustomInput/CustomInput';
 import debounce from 'lodash.debounce';
+import Tabs from '../../components/parts/Tabs/Tabs';
+import { Flex } from 'antd';
 
 export default function MainPage() {
   const [movies, setMovies] = useState([]);
@@ -52,20 +54,23 @@ export default function MainPage() {
   return (
     <>
       <div className={classes.container}>
-        <CustomInput
-          type="text"
-          placeholder="Type to search..."
-          value={inputData}
-          onChange={(e) => setInputData(e.target.value)}
-        />
-        <MoviesList
-          movies={movies}
-          genres={genres}
-          isLoading={isLoading}
-          error={error}
-          currentPage={currentPage}
-          setCurrentPage={(pageNumber) => setCurrentPage(pageNumber)}
-        />
+        <Flex align="center" vertical="true">
+          <Tabs />
+          <CustomInput
+            type="text"
+            placeholder="Type to search..."
+            value={inputData}
+            onChange={(e) => setInputData(e.target.value)}
+          />
+          <MoviesList
+            movies={movies}
+            genres={genres}
+            isLoading={isLoading}
+            error={error}
+            currentPage={currentPage}
+            setCurrentPage={(pageNumber) => setCurrentPage(pageNumber)}
+          />
+        </Flex>
       </div>
     </>
   );

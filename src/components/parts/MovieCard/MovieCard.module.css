@@ -16,11 +16,27 @@
   color: #000;
   padding: 8px 10px;
   border-radius: 100%;
+}
+
+.card__rate_color-from-0-to-3 {
+  border: 2px solid #e90000;
+}
+
+.card__rate_color-from-3-to-5 {
+  border: 2px solid #e97e00;
+}
+
+.card__rate_color-from-5-to-7 {
   border: 2px solid #e9d100;
+}
+
+.card__rate_color-from-7-to-10 {
+  border: 2px solid #66e900;
 }
 
 .card__img {
   width: 183px;
+  height: 279px;
 }
 
 .card__content {

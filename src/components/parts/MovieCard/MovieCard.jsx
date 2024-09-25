@@ -16,6 +16,14 @@ export default function MovieCard({
   genres,
   isLoading,
 }) {
+  const voteNumber = voteAverage.toFixed(1);
+  function colorRate(voteNumber) {
+    if (voteNumber < 3) return classes['card__rate_color-from-0-to-3'];
+    else if (voteNumber >= 3 && voteNumber < 5) return classes['card__rate_color-from-3-to-5'];
+    else if (voteNumber >= 5 && voteNumber < 7) return classes['card__rate_color-from-5-to-7'];
+    else return classes['card__rate_color-from-7-to-10'];
+  }
+
   return (
     <>
       <div className={classes.card}>
@@ -29,7 +37,7 @@ export default function MovieCard({
           </Spin>
         )}
         {!posterPath && <img className={classes.card__img} src={noIcon} alt={`no poster`} />}
-        <p className={classes.card__rate}>{voteAverage.toFixed(1)}</p>
+        <p className={`${classes.card__rate} ${colorRate(voteNumber)}`}>{voteNumber}</p>
         <div className={classes.card__content}>
           <h3 className={classes.card__title}>{title}</h3>
           <p className={classes.card__date}>

@@ -1,0 +1,8 @@
+.tabs {
+  margin-bottom: 19px;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #d9d9d9;
+}
