@@ -4,10 +4,14 @@ import PropTypes from 'prop-types';
 
 export default function Tabs({ active }) {
   return (
-    <div className={classes.tabs}>
-      <CustomButton active={true}>Search</CustomButton>
-      <CustomButton active={active}>Rated</CustomButton>
-    </div>
+    <ul className={classes.tabs}>
+      <li>
+        <CustomButton active={active}>Search</CustomButton>
+      </li>
+      <li>
+        <CustomButton active={false}>Rated</CustomButton>
+      </li>
+    </ul>
   );
 }
 

@@ -55,7 +55,7 @@ export default function MainPage() {
     <>
       <div className={classes.container}>
         <Flex align="center" vertical="true">
-          <Tabs />
+          <Tabs active={true} />
           <CustomInput
             type="text"
             placeholder="Type to search..."
