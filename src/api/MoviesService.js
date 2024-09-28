@@ -30,7 +30,7 @@ export default class MoviesService {
 
   async postResource(urlBase, params, bodyData) {
     const fullUrl = `${urlBase}${params}`;
-    console.log(fullUrl);
+
     const response = await fetch(fullUrl, {
       method: 'POST',
       headers: {
@@ -99,7 +99,6 @@ export default class MoviesService {
       `https://api.themoviedb.org/3/guest_session/${sessionId}/rated/movies`,
       `?${params}`
     );
-    console.log(ratedMovies.results);
     return ratedMovies.results;
   }
 }

@@ -21,7 +21,6 @@ export default function MovieCard({
   rating = 0,
 }) {
   const { setPostData } = useContext(PostDataContext);
-  // const [rating, setRating] = useState();
 
   const voteNumber = voteAverage.toFixed(1);
   function colorRate(voteNumber) {
