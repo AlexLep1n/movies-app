@@ -6,8 +6,11 @@ import PropTypes from 'prop-types';
 import { format } from 'date-fns';
 import parseISO from 'date-fns/parseISO';
 import { Spin } from 'antd';
+import { useContext } from 'react';
+import { PostDataContext } from '../../../context';
 
 export default function MovieCard({
+  id,
   title,
   poster_path: posterPath,
   overview,
@@ -15,7 +18,11 @@ export default function MovieCard({
   release_date: releaseDate,
   genres,
   isLoading,
+  rating = 0,
 }) {
+  const { setPostData } = useContext(PostDataContext);
+  // const [rating, setRating] = useState();
+
   const voteNumber = voteAverage.toFixed(1);
   function colorRate(voteNumber) {
     if (voteNumber < 3) return classes['card__rate_color-from-0-to-3'];
@@ -61,8 +68,8 @@ export default function MovieCard({
           <p className={classes.card__overview}>{trancateText(overview)}</p>
           <Rate
             count={10}
-            // Добавить стейт для рейтинга
-            defaultValue={0}
+            onChange={(value) => setPostData({ movieId: id, rating: value })}
+            defaultValue={rating}
             allowHalf={true}
             allowClear={false}
             style={{ fontSize: '15px', alignSelf: 'flex-end' }}
@@ -74,6 +81,7 @@ export default function MovieCard({
 }
 
 MovieCard.propTypes = {
+  id: PropTypes.number.isRequired,
   title: PropTypes.string.isRequired,
   poster_path: PropTypes.string,
   overview: PropTypes.string.isRequired,
@@ -81,4 +89,5 @@ MovieCard.propTypes = {
   release_date: PropTypes.string.isRequired,
   genres: PropTypes.array,
   isLoading: PropTypes.bool.isRequired,
+  rating: PropTypes.number,
 };

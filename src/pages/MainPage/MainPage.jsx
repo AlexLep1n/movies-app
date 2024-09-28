@@ -4,8 +4,9 @@ import MoviesService from '../../api/MoviesService';
 import { useState, useEffect, useCallback } from 'react';
 import CustomInput from '../../components/ui/CustomInput/CustomInput';
 import debounce from 'lodash.debounce';
-import Tabs from '../../components/parts/Tabs/Tabs';
-import { Flex } from 'antd';
+// import Tabs from '../../components/parts/Tabs/Tabs';
+import { Flex, Tabs } from 'antd';
+import { GenresContext, PostDataContext } from '../../context';
 
 export default function MainPage() {
   const [movies, setMovies] = useState([]);
@@ -14,12 +15,19 @@ export default function MainPage() {
   const [error, setError] = useState({ notFound: false, fetch: false });
   const [inputData, setInputData] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+  const [activeTab, setActiveTab] = useState('Search');
+  const [postData, setPostData] = useState({
+    movieId: null,
+    rating: 0,
+  });
+  const [ratedMovies, setRatedMovies] = useState([]);
 
   const moviesAPI = new MoviesService();
 
+  // Обернули ф-цию загрузки фильмов в debounce и закешировали ее
   const debouncedFetchMovies = useCallback(
     debounce(async (movieName, pageNumber) => {
-      console.log('Call debounce');
+      // console.log('Call debounce');
       setIsLoading(true);
       try {
         const moviesData = await moviesAPI.getAllMovies(movieName, pageNumber);
@@ -34,9 +42,9 @@ export default function MainPage() {
     [moviesAPI]
   );
 
+  // Загружаем данные по строке из input
   useEffect(() => {
     if (inputData.trim()) {
-      console.log('Call debouncedFetchMovies');
       debouncedFetchMovies(inputData, currentPage);
     } else {
       setMovies([]);
@@ -47,31 +55,92 @@ export default function MainPage() {
     };
   }, [inputData, currentPage]);
 
+  // Получаем жанры
+
+  // Получаем жанры и создаем гостовую сессию и запоминаем ее session id
   useEffect(() => {
-    moviesAPI.getGenres().then((genresData) => setGenres(genresData));
+    const fetchGenresAndSessionId = async () => {
+      try {
+        const genresData = await moviesAPI.getGenres();
+        setGenres(genresData);
+        if (!localStorage.getItem('sessionID')) {
+          const guestSessionId = await moviesAPI.createGuestSession();
+          localStorage.setItem('sessionID', `${guestSessionId}`);
+        }
+      } catch {
+        setError({ ...error, fetch: true });
+      }
+    };
+
+    fetchGenresAndSessionId();
   }, []);
+
+  // Отправляем POST запрос при оценки фильма (Работает)
+  useEffect(() => {
+    try {
+      if (postData.movieId) {
+        moviesAPI
+          .rateMovie(localStorage.getItem('sessionID'), postData.movieId, postData.rating)
+          .then((data) => console.log(data.status_message));
+      }
+    } catch {
+      setError({ ...error, fetch: true });
+    }
+  }, [postData]);
+
+  // Получаем оцененные фильмы
+  useEffect(() => {
+    moviesAPI
+      .getRatedMovies(localStorage.getItem('sessionID'), currentPage)
+      .then((data) => setRatedMovies(data));
+  }, [activeTab, currentPage]);
 
   return (
     <>
-      <div className={classes.container}>
-        <Flex align="center" vertical="true">
-          <Tabs active={true} />
-          <CustomInput
-            type="text"
-            placeholder="Type to search..."
-            value={inputData}
-            onChange={(e) => setInputData(e.target.value)}
-          />
-          <MoviesList
-            movies={movies}
-            genres={genres}
-            isLoading={isLoading}
-            error={error}
-            currentPage={currentPage}
-            setCurrentPage={(pageNumber) => setCurrentPage(pageNumber)}
-          />
-        </Flex>
-      </div>
+      <GenresContext.Provider value={{ genres }}>
+        <PostDataContext.Provider
+          value={{
+            postData,
+            setPostData,
+          }}
+        >
+          <div className={classes.container}>
+            <Flex align="center" vertical="true">
+              <Tabs
+                onChange={(key) => setActiveTab(key)}
+                activeKey={activeTab}
+                destroyInactiveTabPane={true}
+                items={[
+                  {
+                    key: 'Search',
+                    label: 'Search',
+                  },
+                  {
+                    key: 'Rated',
+                    label: 'Rated',
+                  },
+                ]}
+              />
+              {/* <Tabs active={true} /> */}
+              {activeTab === 'Search' && (
+                <CustomInput
+                  type="text"
+                  placeholder="Type to search..."
+                  value={inputData}
+                  onChange={(e) => setInputData(e.target.value)}
+                />
+              )}
+              <MoviesList
+                movies={activeTab === 'Search' ? movies : ratedMovies}
+                isLoading={isLoading}
+                error={error}
+                currentPage={currentPage}
+                setCurrentPage={(pageNumber) => setCurrentPage(pageNumber)}
+              />
+            </Flex>
+          </div>
+        </PostDataContext.Provider>
+      </GenresContext.Provider>
     </>
   );
 }
