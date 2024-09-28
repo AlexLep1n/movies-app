@@ -73,7 +73,7 @@ export default class MoviesService {
   // Получаем guest seesion id
   async createGuestSession() {
     const sessionId = await this.getResource(this._guestSessionUrl, '');
-    return sessionId;
+    return sessionId.guest_session_id;
   }
 
   async rateMovie(sessionId, movieId, rating) {

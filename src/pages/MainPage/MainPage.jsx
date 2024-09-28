@@ -57,43 +57,55 @@ export default function MainPage() {
 
   // Получаем жанры
 
-  // Получаем жанры и создаем гостовую сессию и запоминаем ее session id
-  useEffect(() => {
-    const fetchGenresAndSessionId = async () => {
-      try {
-        const genresData = await moviesAPI.getGenres();
-        setGenres(genresData);
-        if (!localStorage.getItem('sessionID')) {
-          const guestSessionId = await moviesAPI.createGuestSession();
-          localStorage.setItem('sessionID', `${guestSessionId}`);
-        }
-      } catch {
-        setError({ ...error, fetch: true });
-      }
-    };
-
-    fetchGenresAndSessionId();
-  }, []);
-
-  // Отправляем POST запрос при оценки фильма (Работает)
-  useEffect(() => {
+  // Получаем жанры, создаем гостовую сессию и запоминаем ее session id
+  const fetchGenresAndCreateSessionId = useCallback(async () => {
     try {
-      if (postData.movieId) {
-        moviesAPI
-          .rateMovie(localStorage.getItem('sessionID'), postData.movieId, postData.rating)
-          .then((data) => console.log(data.status_message));
+      const genresData = await moviesAPI.getGenres();
+      setGenres(genresData);
+      if (!localStorage.getItem('sessionID')) {
+        const guestSessionId = await moviesAPI.createGuestSession();
+        localStorage.setItem('sessionID', `${guestSessionId}`);
       }
     } catch {
       setError({ ...error, fetch: true });
     }
+  }, []);
+
+  useEffect(() => {
+    fetchGenresAndCreateSessionId();
+  }, [fetchGenresAndCreateSessionId]);
+
+  // Отправляем POST запрос при оценки фильма
+  const rateMovie = useCallback(async () => {
+    if (postData.movieId) {
+      try {
+        const data = await moviesAPI.rateMovie(
+          localStorage.getItem('sessionID'),
+          postData.movieId,
+          postData.rating
+        );
+        console.log(data.status_message);
+      } catch {
+        setError({ ...error, fetch: true });
+      }
+    }
   }, [postData]);
 
-  // Получаем оцененные фильмы
   useEffect(() => {
-    moviesAPI
-      .getRatedMovies(localStorage.getItem('sessionID'), currentPage)
-      .then((data) => setRatedMovies(data));
-  }, [activeTab, currentPage]);
+    rateMovie();
+  }, [rateMovie]);
+
+  // Получаем оцененные фильмы
+  const fetchRatedMovies = useCallback(async () => {
+    const data = await moviesAPI.getRatedMovies(localStorage.getItem('sessionID'), currentPage);
+    setRatedMovies(data);
+  }, [currentPage]);
+
+  useEffect(() => {
+    if (activeTab === 'Rated') {
+      fetchRatedMovies();
+    }
+  }, [activeTab]);
 
   return (
     <>
