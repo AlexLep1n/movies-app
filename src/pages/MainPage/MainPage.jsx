@@ -17,9 +17,9 @@ export default function MainPage() {
     rating: 0,
   });
 
-  const [movies, isLoading, error] = useMovies(inputData, currentPage);
+  const [movies, isLoading, error, searchTotalPages] = useMovies(inputData, currentPage);
   const [genres] = useGenresAndSession();
-  const [ratedMovies] = useRatings(postData, currentPage, activeTab);
+  const [ratedMovies, rateTotalPages] = useRatings(postData, currentPage, activeTab);
 
   return (
     <>
@@ -60,6 +60,7 @@ export default function MainPage() {
                 error={error}
                 currentPage={currentPage}
                 setCurrentPage={(pageNumber) => setCurrentPage(pageNumber)}
+                totalPages={activeTab === 'Search' ? searchTotalPages : rateTotalPages}
               />
             </Flex>
           </div>

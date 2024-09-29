@@ -6,6 +6,7 @@ const useMovies = (inputData, currentPage) => {
   const [movies, setMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState({ notFound: false, fetch: false });
+  const [searchTotalPages, setSearchTotalPages] = useState(0);
 
   const moviesAPI = new MoviesService();
 
@@ -14,8 +15,12 @@ const useMovies = (inputData, currentPage) => {
     debounce(async (movieName, pageNumber) => {
       setIsLoading(true);
       try {
-        const moviesData = await moviesAPI.getAllMovies(movieName, pageNumber);
+        const { results: moviesData, total_pages } = await moviesAPI.getAllMovies(
+          movieName,
+          pageNumber
+        );
         setMovies(moviesData);
+        setSearchTotalPages(total_pages);
         setError({ notFound: moviesData.length === 0, fetch: false });
       } catch {
         setError((prev) => ({ ...prev, fetch: true }));
@@ -39,7 +44,7 @@ const useMovies = (inputData, currentPage) => {
     };
   }, [inputData, currentPage]);
 
-  return [movies, isLoading, error];
+  return [movies, isLoading, error, searchTotalPages];
 };
 
 export default useMovies;

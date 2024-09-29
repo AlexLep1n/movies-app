@@ -61,7 +61,7 @@ export default class MoviesService {
     });
 
     const moviesData = await this.getResource(this._basicUrl, `?${params}`);
-    return moviesData.results;
+    return moviesData;
   }
 
   // Получаем жанры фильмов
@@ -99,6 +99,6 @@ export default class MoviesService {
       `https://api.themoviedb.org/3/guest_session/${sessionId}/rated/movies`,
       `?${params}`
     );
-    return ratedMovies.results;
+    return ratedMovies;
   }
 }

@@ -64,13 +64,17 @@ export default function MovieCard({
               </a>
             )}
           </Flex>
-          <p className={classes.card__overview}>{trancateText(overview)}</p>
+          {overview && <p className={classes.card__overview}>{trancateText(overview)}</p>}
+          {!overview && (
+            <p className={classes.card__overview}>Sorry! There is no description of the film.</p>
+          )}
           <Rate
             count={10}
             onChange={(value) => setPostData({ movieId: id, rating: value })}
             defaultValue={rating}
             allowHalf={true}
             allowClear={false}
+            className={classes.card__stars}
             style={{ fontSize: '15px', alignSelf: 'flex-end' }}
           />
         </div>

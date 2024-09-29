@@ -80,3 +80,46 @@
   color: #000;
   height: 135px;
 }
+
+.card__stars {
+  font-size: '15px';
+  align-self: 'flex-end';
+}
+
+@media (max-width: 420px) {
+  .card {
+    display: flex;
+    width: 386px;
+    height: 245px;
+    box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.15);
+    position: relative;
+    padding: 4px 10px;
+  }
+
+  .card__rate {
+    top: 5px;
+    right: 8px;
+  }
+
+  .card__img {
+    width: 60px;
+    height: 91px;
+  }
+
+  .card__content {
+    padding: 0 0 0 13px;
+  }
+
+  .card__overview {
+    position: absolute;
+    top: 107px;
+    left: 10px;
+    height: 92px;
+  }
+
+  .card__stars {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+  }
+}

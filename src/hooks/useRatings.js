@@ -4,6 +4,7 @@ import MoviesService from '../api/MoviesService';
 const useRatings = (postData, currentPage, activeTab) => {
   const [ratedMovies, setRatedMovies] = useState([]);
   const [error, setError] = useState({ notFound: false, fetch: false });
+  const [rateTotalPages, setRateTotalPages] = useState(0);
 
   const moviesAPI = new MoviesService();
 
@@ -29,16 +30,24 @@ const useRatings = (postData, currentPage, activeTab) => {
 
   // Получаем оцененные фильмы
   const fetchRatedMovies = useCallback(async () => {
-    const data = await moviesAPI.getRatedMovies(localStorage.getItem('sessionID'), currentPage);
-    setRatedMovies(data);
+    try {
+      const { results: ratedMoviesData, total_pages } = await moviesAPI.getRatedMovies(
+        localStorage.getItem('sessionID'),
+        currentPage
+      );
+      setRatedMovies(ratedMoviesData);
+      setRateTotalPages(total_pages);
+    } catch {
+      setError({ ...error, fetch: true });
+    }
   }, [currentPage]);
 
   useEffect(() => {
     if (activeTab === 'Rated') {
       fetchRatedMovies();
     }
-  }, [activeTab]);
-  return [ratedMovies, error];
+  }, [activeTab, fetchRatedMovies]);
+  return [ratedMovies, rateTotalPages, error];
 };
 
 export default useRatings;

@@ -5,3 +5,13 @@
   justify-content: flex-start;
   margin-bottom: 36px;
 }
+
+@media (max-width: 420px) {
+  .movies {
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 20px;
+    margin-bottom: 36px;
+  }
+}

@@ -5,7 +5,14 @@ import { Spin, Alert, Pagination } from 'antd';
 import { useCallback, useContext } from 'react';
 import { GenresContext } from '../../../context';
 
-export default function MoviesList({ movies, isLoading, error, currentPage, setCurrentPage }) {
+export default function MoviesList({
+  movies,
+  isLoading,
+  error,
+  currentPage,
+  setCurrentPage,
+  totalPages,
+}) {
   const { genres } = useContext(GenresContext);
 
   const cbGenreNames = useCallback((movie, genres) => {
@@ -49,7 +56,7 @@ export default function MoviesList({ movies, isLoading, error, currentPage, setC
               align="center"
               current={currentPage}
               pageSize={20}
-              total={200}
+              total={20 * totalPages}
               showSizeChanger={false}
               onChange={(pageNumber) => setCurrentPage(pageNumber)}
             />
@@ -66,4 +73,5 @@ MoviesList.propTypes = {
   error: PropTypes.object.isRequired,
   currentPage: PropTypes.number.isRequired,
   setCurrentPage: PropTypes.func.isRequired,
+  totalPages: PropTypes.number.isRequired,
 };
